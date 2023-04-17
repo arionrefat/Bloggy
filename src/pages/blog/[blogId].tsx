@@ -6,11 +6,11 @@ export default function BlogPage() {
   const router = useRouter();
   const blogId = router.query.blogId as string;
 
-  const { data, isLoading, isSuccess } = api.blog.getBlog.useQuery({ blogId });
+  const { data, isLoading } = api.blog.getBlog.useQuery({ blogId });
 
   if (isLoading) {
     return <h1> loading </h1>;
   }
 
-  return isSuccess && data && <RenderBlog file={data?.content} />;
+  return data && <RenderBlog file={data?.content} />;
 }

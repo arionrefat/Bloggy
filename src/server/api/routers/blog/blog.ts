@@ -4,7 +4,6 @@ import {
   protectedProcedure,
 } from '~/server/api/trpc';
 import { blogIdPayloadSchema, blogPayloadSchema } from './blog.schema';
-import { z } from 'zod';
 
 export const blogRouter = createTRPCRouter({
   create: protectedProcedure
@@ -34,16 +33,12 @@ export const blogRouter = createTRPCRouter({
     }),
 
   delete: protectedProcedure
-    .input(
-      z.object({
-        id: z.string(),
-      })
-    )
+    .input(blogIdPayloadSchema)
     .mutation(async ({ ctx, input }) => {
       try {
         await ctx.prisma.blog.delete({
           where: {
-            id: input.id,
+            id: input.blogId,
           },
         });
       } catch (err) {

@@ -5,8 +5,6 @@ import Grid from '@mui/material/Grid';
 export default function blogs() {
   const allBlogs = api.blog.getAll.useQuery().data;
 
-  console.log(allBlogs);
-
   return (
     <Grid container spacing={4} className='px-5'>
       {allBlogs ? (
