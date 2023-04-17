@@ -3,7 +3,7 @@ import {
   publicProcedure,
   protectedProcedure,
 } from '~/server/api/trpc';
-import { blogPayloadSchema } from './blog.schema';
+import { blogIdPayloadSchema, blogPayloadSchema } from './blog.schema';
 import { z } from 'zod';
 
 export const blogRouter = createTRPCRouter({
@@ -23,6 +23,16 @@ export const blogRouter = createTRPCRouter({
       }
     }),
 
+  getBlog: publicProcedure
+    .input(blogIdPayloadSchema)
+    .query(({ input, ctx }) => {
+      return ctx.prisma.blog.findUnique({
+        where: {
+          id: input.blogId,
+        },
+      });
+    }),
+
   delete: protectedProcedure
     .input(
       z.object({
@@ -33,7 +43,7 @@ export const blogRouter = createTRPCRouter({
       try {
         await ctx.prisma.blog.delete({
           where: {
-            id: input.id
+            id: input.id,
           },
         });
       } catch (err) {
@@ -43,5 +53,5 @@ export const blogRouter = createTRPCRouter({
 
   getAll: publicProcedure.query(({ ctx }) => {
     return ctx.prisma.blog.findMany();
-  })
+  }),
 });
