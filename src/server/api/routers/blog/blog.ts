@@ -43,9 +43,5 @@ export const blogRouter = createTRPCRouter({
 
   getAll: publicProcedure.query(({ ctx }) => {
     return ctx.prisma.blog.findMany();
-  }),
-
-  getTotalBlogCount: publicProcedure.query(({ctx}) => {
-    return ctx.prisma.blog.count();
   })
 });
