@@ -8,7 +8,7 @@ import { blogIdPayloadSchema, blogPayloadSchema } from './blog.schema';
 export const blogRouter = createTRPCRouter({
   create: protectedProcedure
     .input(blogPayloadSchema)
-    .mutation(async ({ ctx, input }) => {
+    .query(async ({ ctx, input }) => {
       try {
         await ctx.prisma.blog.create({
           data: {
