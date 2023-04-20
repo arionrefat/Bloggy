@@ -2,6 +2,7 @@ import { Formik } from 'formik';
 import { TextField, Stack, Typography, Button } from '@mui/material';
 import { api } from '~/utils/api';
 import { blogPayloadSchema } from '~/server/api/routers/blog/blog.schema';
+import { toFormikValidationSchema } from 'zod-formik-adapter';
 import { z } from 'zod';
 
 const CreateProject = () => {
@@ -19,7 +20,7 @@ const CreateProject = () => {
   const { mutateAsync, isLoading } = api.blog.create.useMutation();
 
   if (isLoading) {
-    return <h1>Loading </h1>;
+    return <h1>Loading</h1>;
   }
 
   return (
@@ -27,6 +28,7 @@ const CreateProject = () => {
       <Typography variant='h5'>Create a Blog</Typography>
       <Formik
         initialValues={initialBlogsValues}
+        validationSchema={toFormikValidationSchema(blogPayloadSchema)}
         onSubmit={(values, actions) => {
           try {
             mutateAsync(values);
@@ -36,9 +38,17 @@ const CreateProject = () => {
           }
         }}
       >
-        {({ handleSubmit, handleBlur, handleChange, values }) => (
+        {({
+          handleSubmit,
+          handleBlur,
+          handleChange,
+          isSubmitting,
+          values,
+          errors,
+        }) => (
           <form onSubmit={handleSubmit}>
             <TextField
+              error
               id='title-blog'
               name='title'
               autoFocus
@@ -48,18 +58,22 @@ const CreateProject = () => {
               onChange={handleChange}
               onBlur={handleBlur}
               value={values.title}
+              helperText={errors.title}
             />
             <TextField
+              error
               id='blog-image'
               name='image'
               label='Image'
               variant='standard'
               className='w-1/3'
               onChange={handleChange}
+              helperText={errors.image}
               onBlur={handleBlur}
               value={values.image}
             />
             <TextField
+              error
               id='description-blog'
               name='description'
               label='Description'
@@ -68,10 +82,12 @@ const CreateProject = () => {
               rows={2}
               className='w-1/3'
               onChange={handleChange}
+              helperText={errors.description}
               onBlur={handleBlur}
               value={values.description}
             />
             <TextField
+              error
               id='Content'
               name='content'
               label='Content'
@@ -80,10 +96,11 @@ const CreateProject = () => {
               rows={2}
               className='w-1/3'
               onChange={handleChange}
+              helperText={errors.content}
               onBlur={handleBlur}
               value={values.content}
             />
-            <Button type='submit' variant='outlined'>
+            <Button type='submit' variant='outlined' disabled={isSubmitting}>
               Submit
             </Button>
           </form>
