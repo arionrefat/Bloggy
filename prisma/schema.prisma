@@ -103,6 +103,7 @@ model Comment {
   userId    String
   blog      Blog     @relation(fields: [blogId], references: [id], onDelete: Cascade)
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  upvote    Int      @default(0)
 }
 
 model VerificationToken {

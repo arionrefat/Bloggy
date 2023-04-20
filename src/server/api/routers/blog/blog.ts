@@ -3,7 +3,12 @@ import {
   publicProcedure,
   protectedProcedure,
 } from '~/server/api/trpc';
-import { blogIdPayloadSchema, blogPayloadSchema } from './blog.schema';
+import {
+  blogIdSchema,
+  blogUpdatePayloadSchema,
+  blogPayloadSchema,
+  commentSchema,
+} from './blog.schema';
 
 export const blogRouter = createTRPCRouter({
   create: protectedProcedure
@@ -22,18 +27,34 @@ export const blogRouter = createTRPCRouter({
       }
     }),
 
-  getBlog: publicProcedure
-    .input(blogIdPayloadSchema)
-    .query(({ input, ctx }) => {
-      return ctx.prisma.blog.findUnique({
-        where: {
-          id: input.blogId,
-        },
-      });
+  update: protectedProcedure
+    .input(blogUpdatePayloadSchema)
+    .mutation(async ({ ctx, input }) => {
+      try {
+        await ctx.prisma.blog.update({
+          where: {
+            id: input.blogId,
+          },
+          data: {
+            ...input,
+            updatedBy: ctx.session?.user.id,
+          },
+        });
+      } catch (err) {
+        console.log(err);
+      }
     }),
 
+  getBlog: publicProcedure.input(blogIdSchema).query(({ input, ctx }) => {
+    return ctx.prisma.blog.findUnique({
+      where: {
+        id: input.blogId,
+      },
+    });
+  }),
+
   delete: protectedProcedure
-    .input(blogIdPayloadSchema)
+    .input(blogIdSchema)
     .mutation(async ({ ctx, input }) => {
       try {
         await ctx.prisma.blog.delete({
@@ -53,8 +74,39 @@ export const blogRouter = createTRPCRouter({
   getAllPublic: publicProcedure.query(({ ctx }) => {
     return ctx.prisma.blog.findMany({
       where: {
-        visibility: 'public'
-      }
+        visibility: 'public',
+      },
     });
   }),
+
+  like: protectedProcedure
+    .input(blogIdSchema)
+    .mutation(async ({ ctx, input }) => {
+      try {
+        await ctx.prisma.likes.create({
+          data: {
+            ...input,
+            userId: ctx.session.user.id,
+          },
+        });
+      } catch (err) {
+        console.log(err);
+      }
+    }),
+
+  comment: protectedProcedure
+    .input(commentSchema)
+    .query(async ({ input, ctx }) => {
+      try {
+        await ctx.prisma.comment.create({
+          data: {
+            ...input,
+            content: input.comment,
+            userId: ctx.session.user.id,
+          },
+        });
+      } catch (err) {
+        console.log(err);
+      }
+    }),
 });
