@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import { api } from '~/utils/api';
-import RenderBlog from '../blogs/RenderBlog';
+import RenderBlog from '../components/RenderBlog';
 
 export default function BlogPage() {
   const router = useRouter();

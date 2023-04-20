@@ -1,10 +1,12 @@
 import * as React from 'react';
 import Card from '@mui/material/Card';
+import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
-import { CardActionArea } from '@mui/material';
+import { Button, CardActionArea } from '@mui/material';
 import Link from 'next/link';
+import { api } from '~/utils/api';
 
 interface CardsProps {
   id: string;
@@ -19,6 +21,8 @@ export default function BlogCard({
   image,
   id,
 }: CardsProps) {
+  const { mutateAsync } = api.blog.delete.useMutation();
+
   return (
     <Card sx={{ maxWidth: 345 }}>
       <Link href={`/blog/${id}`} passHref>
@@ -39,6 +43,9 @@ export default function BlogCard({
           </CardContent>
         </CardActionArea>
       </Link>
+      <Button onClick={() => mutateAsync({ blogId: id })}>
+        <DeleteOutlinedIcon />
+      </Button>
     </Card>
   );
 }

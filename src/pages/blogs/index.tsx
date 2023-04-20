@@ -1,5 +1,5 @@
 import { api } from '~/utils/api';
-import BlogCard from './BlogCard';
+import BlogCard from '../components/BlogCard';
 import Grid from '@mui/material/Grid';
 
 export default function blogs() {
