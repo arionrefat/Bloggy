@@ -19,10 +19,6 @@ const CreateProject = () => {
 
   const { mutateAsync, isLoading } = api.blog.create.useMutation();
 
-  if (isLoading) {
-    return <h1>Loading</h1>;
-  }
-
   return (
     <Stack className='flex flex-col items-center justify-center'>
       <Typography variant='h5'>Create a Blog</Typography>
@@ -100,7 +96,7 @@ const CreateProject = () => {
               onBlur={handleBlur}
               value={values.content}
             />
-            <Button type='submit' variant='outlined' disabled={isSubmitting}>
+            <Button type='submit' variant='outlined' disabled={isSubmitting || isLoading}>
               Submit
             </Button>
           </form>

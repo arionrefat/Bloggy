@@ -1,9 +1,18 @@
 import { api } from '~/utils/api';
 import BlogCard from '../components/BlogCard';
 import Grid from '@mui/material/Grid';
+import { useSession } from 'next-auth/react';
 
 export default function blogs() {
-  const allBlogs = api.blog.getAll.useQuery().data;
+  const { data: sessionData } = useSession();
+
+  let allBlogs;
+
+  if (sessionData) {
+    allBlogs = api.blog.getAll.useQuery().data;
+  } else {
+    allBlogs = api.blog.getAllPublic.useQuery().data;
+  }
 
   return (
     <Grid container spacing={4} className='px-5'>

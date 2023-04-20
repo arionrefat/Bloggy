@@ -49,4 +49,12 @@ export const blogRouter = createTRPCRouter({
   getAll: publicProcedure.query(({ ctx }) => {
     return ctx.prisma.blog.findMany();
   }),
+
+  getAllPublic: publicProcedure.query(({ ctx }) => {
+    return ctx.prisma.blog.findMany({
+      where: {
+        visibility: 'public'
+      }
+    });
+  }),
 });
