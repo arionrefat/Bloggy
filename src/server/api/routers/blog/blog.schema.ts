@@ -61,8 +61,9 @@ export const commentSchema = z
     blogId: z.string().cuid2(),
     comment: z
       .string({
-        required_error: 'Please comment',
+        required_error: 'Comment is Required',
       })
-      .max(600),
+      .max(600)
+      .optional(),
   })
   .strict();
