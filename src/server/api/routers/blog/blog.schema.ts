@@ -64,6 +64,5 @@ export const commentSchema = z
         required_error: 'Comment is Required',
       })
       .max(600)
-      .optional(),
   })
   .strict();
