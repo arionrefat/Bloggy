@@ -1,6 +1,5 @@
 import { YoutubeTranscript } from 'youtube-transcript';
 import cgptRequest from './cgpt';
-import { ChatMessage } from 'chatgpt';
 
 interface TranscriptData {
   text: string;
@@ -17,7 +16,7 @@ async function fetchTranscripts(url: string): Promise<string> {
   return concatenateYoutubeTranscription(transcriptionData);
 }
 
-export async function generateBlogFromYoutube(url: string): Promise<string> {
+export default async function generateBlogFromYoutube(url: string): Promise<string> {
   const script = await fetchTranscripts(url);
   const cgptRequestedBlog = await cgptRequest({
     message: `${script} Suppose, you are an article writer and you only outputs in  markdown format. The above paragraph is a youtube video transcript. Now make a small article based on the above transcript.`,
